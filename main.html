@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Karma Kunal Registration</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+    .hero {
+      background: url("https://github.com/GoldBoi4/Virus/blob/main/karma%20kunaallight.jpg?raw=true") no-repeat center/cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.6); }
+    .hero-content { position:relative; z-index:2; }
+    h1 { font-size:3rem; margin-bottom:1rem; }
+    .cards { display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; }
+    .card { background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; width:280px; box-shadow:0 8px 20px rgba(0,0,0,0.5); transition:transform .3s; }
+    .card:hover { transform:translateY(-5px); }
+    .card img { width:100%; height:auto; display:block; }
+    .card-content { padding:1rem; }
+    .card h2 { margin:0.5rem 0; }
+    button { padding:.6rem 1.2rem; background:#ff6600; border:none; border-radius:8px; color:#fff; font-size:1rem; cursor:pointer; transition:background .18s; }
+    button:hover { background:#e65c00; }
+
+    /* Modal */
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000; animation:fadeIn .4s; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .modal-content { background:#222; padding:2rem; border-radius:12px; width:90%; max-width:400px; text-align:left; position:relative; }
+    .modal-content h2 { margin-top:0; color:#ff6600; }
+    .modal-content label { display:block; margin:0.5rem 0 .2rem; }
+    .modal-content input { width:100%; padding:.6rem; margin-bottom:1rem; border:none; border-radius:8px; }
+    .close-btn { position:absolute; top:10px; right:15px; font-size:1.5rem; color:#fff; cursor:pointer; }
+    .confirmation { display:none; margin-top:1rem; color:#00ff88; font-weight:bold; }
+
+    /* Payment Section */
+    .payment-container { display:none; height:100vh; align-items:center; justify-content:center; background:#111; flex-direction:column; }
+    .payment-box { background:rgba(0,0,0,0.85); padding:20px; border-radius:15px; text-align:center; box-shadow:0 6px 15px rgba(255,255,255,0.08); max-width:350px; }
+    .payment-box h2 { color:#ff6600; margin-bottom:15px; }
+    .qr-image { width:100%; max-width:300px; border-radius:10px; }
+    .price { margin-top:15px; font-size:1.2rem; color:#00ff88; }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>Karma Kunal Workshop Registration</h1>
+      <div class="cards">
+        <div class="card">
+          <img src="https://github.com/GoldBoi4/Virus/blob/main/karma%20kunaalchandigarh.jpg?raw=true" alt="Chandigarh Poster">
+          <div class="card-content">
+            <h2>Chandigarh</h2>
+            <p>Sept 20 – The Karma Dance Studio</p>
+            <button onclick="openModal('Chandigarh')">Register</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://github.com/GoldBoi4/Virus/blob/main/karma%20kunaaldelhi.jpg?raw=true" alt="Delhi Poster">
+          <div class="card-content">
+            <h2>Delhi</h2>
+            <p>Sept 27 – Dance Kala Studio</p>
+            <button onclick="openModal('Delhi')">Register</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="registerModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Register</h2>
+
+      <form id="registerForm">
+        <input type="hidden" id="cityField" name="city" value="">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div class="confirmation" id="confirmationMsg">
+        ✅ Registration successful! Redirecting to payment...
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Section -->
+  <div id="paymentSection" class="payment-container">
+    <div class="payment-box">
+      <h2>Secure Payment</h2>
+      <img id="qrImg" src="https://raw.githubusercontent.com/GoldBoi4/pay-1/main/21205692-ca9a-4bce-95d3-fbc12f30b4d3.jpg" alt="Scan QR to Pay" class="qr-image">
+      <p class="price">Pay ₹549</p>
+    </div>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyrlFEQDEMOuR1hTAdL-jz9sxixOKDxp2_iAaAf6v5mJOLXzKgW-r6DtL0LrNyLBHok/exec"; // replace with your deployed Apps Script URL
+
+    const modal = document.getElementById('registerModal');
+    const form = document.getElementById('registerForm');
+    const confirmation = document.getElementById('confirmationMsg');
+    const cityField = document.getElementById('cityField');
+    const modalTitle = document.getElementById('modalTitle');
+    const heroSection = document.querySelector('.hero');
+    const paymentSection = document.getElementById('paymentSection');
+
+    function openModal(city) {
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      cityField.value = city;
+      modalTitle.innerText = `Register for ${city}`;
+      form.style.display = 'block';
+      confirmation.style.display = 'none';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
+    }
+
+    // close when clicking outside
+    window.onclick = function(event) {
+      if (event.target === modal) closeModal();
+    }
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    /* Submit to Google Apps Script */
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = new FormData(form);
+
+      fetch(scriptURL, { method: "POST", body: data })
+      .then(response => {
+        if (response.ok) {
+          form.style.display = 'none';
+          confirmation.style.display = 'block';
+          setTimeout(() => {
+            modal.style.display = 'none';
+            heroSection.style.display = "none";
+            paymentSection.style.display = "flex";
+          }, 2000);
+        } else {
+          alert("❌ Error submitting form.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("❌ Error submitting form. Check console.");
+      });
+    });
+  </script>
+</body>
+</html>
